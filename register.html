@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş ve Kayıt</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 800px;
+        }
+
+        .form-container {
+            position: relative;
+            z-index: 1;
+            border: 1px solid black;
+            width: 400px;
+            height: 500px;
+            background-color: rgba(0, 0, 255, 0.7); /* Şeffaf arka plan */
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.75);
+            overflow: hidden;
+            padding-top: 20px;
+        }
+
+        form {
+            display: flex;
+            box-sizing: border-box;
+            padding: 40px;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: brightness(40%);
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        h1 {
+            font-weight: normal;
+            font-size: 24px;
+            text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        label {
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 2px;
+            padding-left: 10px;
+        }
+
+        input {
+            background: rgba(255, 255, 255, 0.3);
+            height: 40px;
+            line-height: 40px;
+            border-radius: 20px;
+            padding: 0px 20px;
+            border: none;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        button {
+            background: rgba(45, 126, 231);
+            height: 40px;
+            line-height: 40px;
+            border-radius: 40px;
+            border: none;
+            margin: 10px 0px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop>
+        <source src="video.mp4" type="video/mp4"> <!-- Video dosyanızın adını buraya yazın -->
+    </video>
+    <div class="container">
+        <div class="form-container">
+            <form id="login-form">
+                <h1>Giriş</h1>
+                <label for="username">Ad</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="password">Şifre</label> 
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">Giriş</button>
+            </form>
+        </div>
+        <div class="form-container">
+            <form id="register-form">
+                <h1>Qeydiyyat ol</h1>
+                <label for="reg-username">Istifadeci adi</label>
+                <input type="text" id="reg-username" name="username" required>
+                
+                <label for="reg-email">E-posta</label>
+                <input type="email" id="reg-email" name="email" required>
+                
+                <label for="reg-password">Şifre</label>
+                <input type="password" id="reg-password" name="password" required>
+                
+                <button type="submit">Kayıt Ol</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Giriş formunu işleme
+        document.getElementById('login-form').onsubmit = function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Giriş bilgilerini backend'e gönderin
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Giriş Başarı:', data);
+                // Başarılı girişte yapılacaklar
+            })
+            .catch((error) => {
+                console.error('Hata:', error);
+            });
+        };
+
+        // Kayıt formunu işleme
+        document.getElementById('register-form').onsubmit = function(event) {
+            event.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            // Kayıt bilgilerini backend'e gönderin
+            fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, email, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Kayıt Başarı:', data);
+                // Başarılı kayıt işlemi sonrası yapılacaklar
+            })
+            .catch((error) => {
+                console.error('Hata:', error);
+            });
+        };
+    </script>
+</body>
+</html>
